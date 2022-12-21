@@ -3,10 +3,9 @@ function main(wb: ExcelScript.Workbook) {
   const lRow:number = (ws.getUsedRange().getLastRow().getRowIndex()+1) //offset 
   let arr: object[] = arrBuilder(ws.getRange(`C2:C${lRow + 1}`));
   const lMonth:number = getMonthFromStr(arr,'max'); //returns the index of the month starting from zero
-  const fMonth: number = getMonthFromStr(arr,'min'); 
-  // console.log(fMonth,lMonth);
+  const fMonth: number = getMonthFromStr(arr,'min');
+  resolveDate(ws); //creates the resolved date column in ws
   createSheets(fMonth,lMonth);
-  // createSheets(0, 0);
 
   
   //this is the master function that creates the individual sheets based on the number of months in the range. It then creates a caldendar based on a 31 day month and adds a function to pull the data from column B of the raw data sheet.
@@ -114,12 +113,29 @@ function main(wb: ExcelScript.Workbook) {
   //receives a cell reference from createSheets in the loop, offsets those cell references, and adds a formula that captures the name of the original sheet, and what day of the month it is. 
     function calendarDay(r:number,c:number,wsName:ExcelScript.Worksheet){
       let name: string = ws.getName();
-      wsName.getCell((r + 1), (c + 1)).setFormulaR1C1(`=FILTER('${name}'!C2, (('${name}'!C3>=DATEVALUE(R[-1]C[-1]&" "&R2C2&" 2023"))*('${name}'!C3<DATEVALUE((R[-1]C[-1]+1)&" "&R2C2&" 2023"))),"")`);
+      wsName.getCell((r + 1), (c + 1)).setFormulaR1C1(`=FILTER('${name}'!C2, (('${name}'!C12>=DATEVALUE(R[-1]C[-1]&" "&R2C2&" 2023"))*('${name}'!C12<DATEVALUE((R[-1]C[-1]+1)&" "&R2C2&" 2023"))),"")`);
     };
 
     function lastCalendarDay(r: number, c: number, wsName: ExcelScript.Worksheet,month:number) {
       let name: string = ws.getName();
       let mName: string = getMonthName(month+1)
-      wsName.getCell((r + 1), (c + 1)).setFormulaR1C1(`=FILTER('${name}'!C2, (('${name}'!C3>=DATEVALUE(R[-1]C[-1]&" "&R2C2&" 2023"))*('${name}'!C3<DATEVALUE("1 ${mName} 2023"))),"")`);
+      wsName.getCell((r + 1), (c + 1)).setFormulaR1C1(`=FILTER('${name}'!C2, (('${name}'!C12>=DATEVALUE(R[-1]C[-1]&" "&R2C2&" 2023"))*('${name}'!C12<DATEVALUE("1 ${mName} 2023"))),"")`);
+    };
+
+    function formArrBuilder(formula:string,num:number):string[][]{
+      let arr:string[][]=[];
+      for (let i = 0;i<=num;i++){
+        arr[i] = [];
+        for(let j = 0;j<1;j++){
+          arr[i][j] = formula;
+        };
+      };
+      return arr;
+    };
+
+    function resolveDate(wksht:ExcelScript.Worksheet){
+      let lCol:number = wksht.getUsedRange().getLastColumn().getColumnIndex() +1; //offset to create a new lastColumn
+      let rng:ExcelScript.Range = wksht.getRangeByIndexes(1,lCol,lRow-1,1);
+      rng.setFormulasR1C1(formArrBuilder(`=R[0]C3 + (NUMBERVALUE(LEFT(RC[-1],1))*IFS(RIGHT(RC[-1],1)="d",1,RIGHT(RC[-1],1)="w",7))`,lRow - 2));
     };
 };
