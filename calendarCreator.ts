@@ -1,16 +1,15 @@
 function main(wb: ExcelScript.Workbook) {
   var ws:ExcelScript.Worksheet = wb.getActiveWorksheet();
   const lRow:number = (ws.getUsedRange().getLastRow().getRowIndex()+1) //offset 
-  let arr: object[] = arrBuilder(ws.getRange(`C2:C${lRow + 1}`)); //the scheduled createDate is stored in column C and the data that I want to return is in column B
+  let arr: object[] = arrBuilder(ws.getRange(`C2:C${lRow + 1}`));
   const lMonth:number = getMonthFromStr(arr,'max'); //returns the index of the month starting from zero
   const fMonth: number = getMonthFromStr(arr,'min'); 
+  // console.log(fMonth,lMonth);
   createSheets(fMonth,lMonth);
+  // createSheets(0, 0);
 
   
-    /*
-  this is the master function that creates the individual sheets based on the number of months in the range. 
-  It then creates a caldendar based on a 31 day month and adds a function to pull the data from column B of the raw data sheet.
-  */
+  //this is the master function that creates the individual sheets based on the number of months in the range. It then creates a caldendar based on a 31 day month and adds a function to pull the data from column B of the raw data sheet.
 
   function createSheets(startMonth: number, endMonth: number) {
     for (let i: number = startMonth; i <= endMonth; i++) {
@@ -60,11 +59,27 @@ function main(wb: ExcelScript.Workbook) {
     return arr[n];
   };
 
+  function weekDayHeader(wksht:ExcelScript.Worksheet){
+    let a:string[] = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    let c:number = 2;
+    let n:number = 0;
+    for (let s of a){
+      wksht.getCell(2,c).setValue(a[n]);
+      c += 2;
+      n ++;
+    };
+  }
+
+  function getWeekday(m:number):number{
+    return new Date(`1/${m+1}/2023`).getDay();
+  };
+
   /* this function creates the grid(s) for calendar and accepts the month number to use in the getLastDay function.*/
     function makeCalendar(m:number,wksht:ExcelScript.Worksheet){ 
-      let rNum:number = 2;
-      let cNum:number = 1;
+      let rNum:number = 3;
+      let cNum:number = (getWeekday(m)*2)+1; //(x*2)+1 -> the offset to apply the correct day to the correct column. 
       const lD:number = getLastDay(m);
+      weekDayHeader(wksht); //adds weekday headers
       for (let d:number = 1;d<=lD;d++){
         let cell:ExcelScript.Range = wksht.getCell(rNum,cNum);
         allBorders(cell);
