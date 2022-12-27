@@ -1,7 +1,6 @@
 /*
 
-In Office typescript library, the range.setFormulasR1C1() method has laughably little documentation. The method requires an array of arrays, each sub-array with it's own copy 
-of the formula to be used, or barring that, each sub-array requires a separate function. 
+In Office typescript library, the range.setFormulasR1C1() method has laughably little documentation. The method requires an array of arrays, each sub-array with it's own copy of the formula to be used, or barring that, each sub-array requires a separate function. 
 
 */
 
@@ -21,7 +20,7 @@ function frmlaArrConstructor(f:string,n:number):string[][]{
 //The initialization of the above function looks like this:
 
 let sheet: ExcelScript.Worksheet = workbook.getActiveWorksheet();
-let sheetName = sheet.getName()
+let sheetName:string = sheet.getName()
 let fArray:string[][] = frmlaArrConstructor(`='${sheetName}'!RC[-1]`,5); //using an object literal to capture a sheet name.
 console.log(fArray);
 
