@@ -71,7 +71,7 @@ function main(wb: ExcelScript.Workbook) {
   }
 
   function getWeekday(m:number):number{
-    return new Date(`1/${m+1}/2023`).getDay();
+    return new Date(`${m+1}/1/2023`).getDay();
   };
 
   /* this function creates the grid(s) for calendar and accepts the month number to use in the getLastDay function.*/
