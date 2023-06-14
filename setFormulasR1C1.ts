@@ -63,13 +63,10 @@ function main(wb: ExcelScript.Workbook) {
         };
         
 
-    function frmlaArrConstructor(f:string,n:number):string[][]{
-        const arr:string[][] = [];
-        for (let i:number = 0; i<n; i++){
-            arr[i] = [];
-            for(let j:number = 0; j<1; j++){
-                arr[i][j] = f;
-            };
+    function frmlaArrConstructor(f:string,startRowIdx:number,endRowIdx:number):string[][]{
+        const arr:string[][]=[];
+        for(let n:number = startRowIdx; n<=endRowIdx; n++){
+            arr.push([f]);
         };
         return arr;
     };
