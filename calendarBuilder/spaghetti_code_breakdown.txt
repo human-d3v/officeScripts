@@ -25,7 +25,7 @@ calendarDay() <- adds a function to each calendar day in the grid created by
  
 formArrBuilder() <- creates a multidimensional array that replicates a relative-
                     reference formula that can be used to paste into a range of
-										cells.
+		    cells.
  
  
 ==============================================================================
