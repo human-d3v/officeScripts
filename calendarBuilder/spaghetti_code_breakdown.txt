@@ -1,0 +1,82 @@
+==============================================================================
+Level 1 - These are functions that don't rely on other functions
+==============================================================================
+ 
+dateArrBuilder() <- creates the initial array of dates to be used in the rest
+ 
+getMonthFromStr() <- returns the first or last month depending on properties
+                     passed into the function.
+ 
+getMonthName() <- accepts a number, returns a string with a 3 letter month name
+ 
+getLastDay() <- accepts a month number returns the last day of the month from
+                an array
+ 
+weekdayHeader() <- pastes the contents of a weekday array into a range of cells
+ 
+getFirstWeekday() <- accepts a month number and returns the day of the week
+ 
+allBorders() <- accepts a range of cells, changes the format value to accept a
+                border on every side
+ 
+calendarDay() <- adds a function to each calendar day in the grid created by
+                 the border function.
+ 
+ 
+formArrBuilder() <- creates a multidimensional array that replicates a relative-
+                    reference formula that can be used to paste into a range of
+										cells.
+ 
+ 
+==============================================================================
+Level 2 - these rely on the outcomes of one or more level one functions
+==============================================================================
+ 
+ 
+lastCalendarDay() 
+    -getMonthName()
+    -> returns the last day of the month from an array, taking into account the
+       leap year of the month property fed into the function
+                                          
+ 
+resolveDate()
+    -formArrBuilder()
+    -> uses the formArrBuilder() method to create a due date from the created date
+       in column C:C
+ 
+===============================================================================
+Level 3 - these rely on the outcomes of one or more level 2 functions
+===============================================================================
+ 
+makeCalendar()
+    -getFirstWeekday()
+    -getLastDay()
+    -weekDayHeader()
+    -allBorders()
+    -lastCalendarDay()
+    -calendarDay()
+    -> this function receives a month, worksheet, and year, uses the
+       getFirstWeekay() function to find the first weekday of the month, loops
+       from 1 to the last day of the month (found with the lastCalendarDay()
+       function). Finally, it uses a ternary statement to check equality between
+       the last day of the month and the variable denoting the current iteration 
+       of the loop with the outcome being the regular calendarDay() function
+       call or the lastCalendarDay() function call.
+ 
+===============================================================================
+Level 4 - these rely on the outcomes of one or more level 3 functions
+------------------------------------------------------------------------------
+-----------------------WELCOME TO DEPENDENCY HELL-----------------------------
+------------------------------------------------------------------------------
+==============================================================================
+ 
+createSheets()
+    -getMonthName()
+    -makeCalendar()
+    --> Function takes all of the functionality of the makeCalendar() function and
+        implements that functionality in a loop. The loop is created by using
+        comparison operators between the startMonth and endMonth values.
+        results of these comparisons create output arrays for the looping
+        variables.
+ 
+=================================================================================
